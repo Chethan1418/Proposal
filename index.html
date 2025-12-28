@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Monisha ❤️</title>
+<title>For Zero Two ❤️</title>
 
 <style>
 *{box-sizing:border-box}
@@ -28,12 +28,12 @@ body{
   border-radius:30px;
   text-align:center;
   box-shadow:0 40px 90px rgba(0,0,0,0.8);
-  animation:fade 0.6s ease;
+  animation:fade 0.4s ease;
 }
 
 @keyframes fade{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
+  from{opacity:0;transform:scale(0.9)}
+  to{opacity:1;transform:scale(1)}
 }
 
 .cat{
@@ -70,7 +70,6 @@ button{
 .yes{
   background:linear-gradient(135deg,#ff4b6e,#ff2f92);
   color:white;
-  box-shadow:0 0 20px rgba(255,75,110,0.6);
 }
 
 .no{
@@ -85,24 +84,58 @@ button{
 <div class="card" id="card"></div>
 
 <script>
-let stage = 0;
+let noCount = 0;
 const card = document.getElementById("card");
 
 /* vibration */
 function vibrate(){
   if(navigator.vibrate){
-    navigator.vibrate([80,40,80]);
+    navigator.vibrate([60,30,60]);
   }
 }
+
+/* FUNNY + CUTE NO STAGES (LOOPS FOREVER) */
+const noStages = [
+  {
+    img:"https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
+    bubble:"Zero Two… 😾",
+    text:"Are you sure, Bonda? I was really hoping you’d say yes"
+  },
+  {
+    img:"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+    bubble:"Hmm Zero Two 😼",
+    text:"Bonda, maybe the YES button looks nicer"
+  },
+  {
+    img:"https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif",
+    bubble:"Still thinking? 🥺",
+    text:"Zero Two, I’ll buy you a Kinder Joy 🍫"
+  },
+  {
+    img:"https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
+    bubble:"Please reconsider 😭",
+    text:"Okay then… lots of ice-cream 🍨 for my Bonda"
+  },
+  {
+    img:"https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
+    bubble:"I’m not giving up 😌",
+    text:"Zero Two, Bonda… you’re too special to let go"
+  },
+  {
+    img:"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+    bubble:"Take your time 💭",
+    text:"I’ll wait right here, my Bonda"
+  }
+];
 
 showStart();
 
 function showStart(){
   card.innerHTML = `
     <img class="cat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
-    <div class="bubble">Hey Monisha 😽</div>
+    <div class="bubble">Hey Zero Two 😽</div>
     <p>
-      I love you ❤️<br>
+      I love you, Bonda ❤️<br>
       Will you be mine forever?
     </p>
     <button class="yes" onclick="yes()">YES 💍</button>
@@ -111,55 +144,30 @@ function showStart(){
 }
 
 function no(){
-  stage++;
   vibrate();
+  const stage = noStages[noCount % noStages.length];
+  noCount++;
 
-  if(stage === 1){
-    card.innerHTML = `
-      <img class="cat" src="https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif">
-      <div class="bubble">Are you sure? 😼</div>
-      <p>
-        I’ll buy you a Kinder Joy 🍫<br>
-        Think again… my heart is serious
-      </p>
-      <button class="yes" onclick="yes()">YES 💍</button>
-      <button class="no" onclick="no()">NO 🙅‍♀️</button>
-    `;
-  }
-  else if(stage === 2){
-    card.innerHTML = `
-      <img class="cat" src="https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif">
-      <div class="bubble">Last chance 🥺</div>
-      <p>
-        Forget Kinder Joy 😤<br>
-        I’ll get you LOTS of ice-cream 🍨😂
-      </p>
-      <button class="yes" onclick="yes()">YES 💍</button>
-      <button class="no" onclick="no()">NO 🙅‍♀️</button>
-    `;
-  }
-  else{
-    card.innerHTML = `
-      <img class="cat" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
-      <div class="bubble">Okay fine 💔</div>
-      <p>
-        Hehehe 🤣<br>
-        Even if you say no<br>
-        My heart already chose you
-      </p>
-      <button class="yes" onclick="yes()">YES 💍</button>
-    `;
-  }
+  card.innerHTML = `
+    <img class="cat" src="${stage.img}">
+    <div class="bubble">${stage.bubble}</div>
+    <p>
+      ${stage.text}<br>
+      <small style="opacity:.6;">Attempt #${noCount}</small>
+    </p>
+    <button class="yes" onclick="yes()">YES 💍</button>
+    <button class="no" onclick="no()">NO 🙅‍♀️</button>
+  `;
 }
 
 function yes(){
   card.innerHTML = `
     <img class="cat" src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
-    <div class="bubble">She said YES 😻</div>
+    <div class="bubble">Zero Two said YES 😻</div>
     <p>
-      Love you my baby ❤️<br>
+      You made me the happiest, Bonda ❤️<br>
       December 20 was just the beginning<br>
-      I promise to love you forever
+      I promise to love you forever, Zero Two
     </p>
     <div style="font-size:60px;">🎉💍💖</div>
   `;
