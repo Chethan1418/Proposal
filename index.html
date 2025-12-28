@@ -15,7 +15,6 @@ body{
   color:#eee;
 }
 
-/* CARD */
 .card{
   position:relative;
   margin:auto;
@@ -30,7 +29,6 @@ body{
   box-shadow:0 40px 80px rgba(0,0,0,.8);
 }
 
-/* CONTENT */
 img{
   width:180px;
   border-radius:18px;
@@ -45,7 +43,6 @@ img{
   margin-bottom:10px;
 }
 
-/* BUTTONS */
 button{
   padding:14px;
   font-size:18px;
@@ -66,42 +63,6 @@ button{
   background:#333;
   color:#aaa;
 }
-
-/* 💖 ENDING ANIMATION */
-.end{
-  animation:fadeInSlow 2.5s ease forwards;
-}
-
-@keyframes fadeInSlow{
-  from{
-    opacity:0;
-    transform:scale(0.95);
-  }
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-/* FLOATING HEARTS */
-.heart{
-  position:fixed;
-  bottom:-20px;
-  font-size:20px;
-  opacity:0.6;
-  animation:floatUp 6s linear forwards;
-}
-
-@keyframes floatUp{
-  from{
-    transform:translateY(0);
-    opacity:0.7;
-  }
-  to{
-    transform:translateY(-110vh);
-    opacity:0;
-  }
-}
 </style>
 </head>
 
@@ -109,13 +70,14 @@ button{
 
 <div class="card" id="card">
   <div id="content"></div>
-  <button class="yes" onclick="yes()">YES 💍</button>
+  <button class="yes" id="yesBtn" onclick="yes()">YES 💍</button>
   <button class="no" id="noBtn">NO 🙅‍♀️</button>
 </div>
 
 <script>
 const content = document.getElementById("content");
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
 let count = 0;
 
 /* vibration */
@@ -123,7 +85,7 @@ function vibrate(){
   if(navigator.vibrate) navigator.vibrate([60,30,60]);
 }
 
-/* funny + romantic loop */
+/* messages */
 const messages = [
   ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Zero Two 😽","Princess Buddi… I’m serious about us"],
   ["https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif","Hmm 😼","Darling, the YES button is waiting"],
@@ -141,17 +103,35 @@ function showStart(){
       Will you be mine forever?
     </p>
   `;
-  resetNo();
+  placeNoFar();
 }
 
+/* 🔥 PLACE NO FAR FROM YES */
+function placeNoFar(){
+  const yesRect = yesBtn.getBoundingClientRect();
+  const buffer = 140; // distance from YES
+  let x, y, tries = 0;
+
+  do{
+    x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    tries++;
+  }while(
+    x > yesRect.left - buffer &&
+    x < yesRect.right + buffer &&
+    y > yesRect.top - buffer &&
+    y < yesRect.bottom + buffer &&
+    tries < 50
+  );
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top  = y + "px";
+}
+
+/* NO RUNS */
 function moveNo(){
   vibrate();
-
-  const maxX = window.innerWidth - noBtn.offsetWidth;
-  const maxY = window.innerHeight - noBtn.offsetHeight;
-
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top  = Math.random() * maxY + "px";
+  placeNoFar();
 
   const m = messages[count % messages.length];
   count++;
@@ -166,47 +146,23 @@ function moveNo(){
   `;
 }
 
-function resetNo(){
-  noBtn.style.left = "50%";
-  noBtn.style.bottom = "15px";
-  noBtn.style.top = "auto";
-  noBtn.style.transform = "translateX(-50%)";
-}
-
-/* 💖 YES — SLOW ROMANTIC ENDING */
+/* YES */
 function yes(){
   noBtn.style.display = "none";
-  document.querySelector(".yes").style.display = "none";
-
+  yesBtn.style.display = "none";
   content.innerHTML = `
-    <div class="end">
-      <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
-      <div class="bubble">She said YES 😻</div>
-      <p>
-        My love, my princess, my forever ❤️<br><br>
-        December 20 was just the beginning<br>
-        I promise to choose you every day
-      </p>
-    </div>
+    <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
+    <div class="bubble">She said YES 😻</div>
+    <p>
+      My love, my princess, my forever ❤️<br>
+      December 20 was just the beginning<br>
+      I promise to choose you every day
+    </p>
+    <div style="font-size:55px;">🎉💍💖</div>
   `;
-
-  startHearts();
 }
 
-/* floating hearts */
-function startHearts(){
-  setInterval(()=>{
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "💖";
-    h.style.left = Math.random()*100 + "vw";
-    h.style.fontSize = (18 + Math.random()*10) + "px";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),6000);
-  },600);
-}
-
-/* NO runs away */
+/* EVENTS */
 noBtn.addEventListener("mouseover", moveNo);
 noBtn.addEventListener("touchstart", moveNo);
 
