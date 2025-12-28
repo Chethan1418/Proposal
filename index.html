@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Zero Two ❤️</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+  font-family:system-ui;
+  color:#eee;
+}
+
+.card{
+  background:#141428;
+  padding:25px;
+  width:90%;
+  max-width:420px;
+  border-radius:25px;
+  text-align:center;
+  box-shadow:0 40px 80px rgba(0,0,0,.8);
+}
+
+img{
+  width:180px;
+  border-radius:18px;
+  margin-bottom:12px;
+}
+
+.bubble{
+  background:#1f1f3d;
+  padding:10px 15px;
+  border-radius:20px;
+  display:inline-block;
+  margin-bottom:10px;
+}
+
+button{
+  width:80%;
+  padding:14px;
+  font-size:18px;
+  border:none;
+  border-radius:999px;
+  margin-top:12px;
+}
+
+.yes{background:#ff4b6e;color:white}
+.no{background:#333;color:#aaa}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card"></div>
+
+<script>
+const card = document.getElementById("card");
+let count = 0;
+
+const funny = [
+  ["https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif","Zero Two 😾","Are you sure, Bonda?"],
+  ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Hmm 😼","YES looks cute actually"],
+  ["https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif","Thinking? 🥺","Kinder Joy 🍫 for you"],
+  ["https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif","Please 😭","Ice-cream 🍨 deal"],
+  ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Still no 😅","I’ll wait forever"]
+];
+
+function vibrate(){
+  if(navigator.vibrate) navigator.vibrate([60,30,60]);
+}
+
+function showStart(){
+  card.innerHTML = `
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
+    <div class="bubble">Hey Zero Two 😽</div>
+    <p>I love you, Bonda ❤️<br>Will you be mine forever?</p>
+    <button class="yes" onclick="yes()">YES 💍</button>
+    <button class="no" onclick="no()">NO 🙅‍♀️</button>
+  `;
+}
+
+function no(){
+  vibrate();
+  const f = funny[count % funny.length];
+  count++;
+  card.innerHTML = `
+    <img src="${f[0]}">
+    <div class="bubble">${f[1]}</div>
+    <p>${f[2]}<br><small>NO clicks: ${count}</small></p>
+    <button class="yes" onclick="yes()">YES 💍</button>
+    <button class="no" onclick="no()">NO 🙅‍♀️</button>
+  `;
+}
+
+function yes(){
+  card.innerHTML = `
+    <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
+    <div class="bubble">Zero Two said YES 😻</div>
+    <p>You made me the happiest, Bonda ❤️<br>
+    December 20 was just the beginning<br>
+    I promise to love you forever</p>
+    <div style="font-size:55px;">🎉💍💖</div>
+  `;
+}
+
+showStart();
+</script>
+
+</body>
+</html>
