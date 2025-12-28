@@ -9,15 +9,18 @@
 body{
   margin:0;
   height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
   font-family:system-ui;
+  overflow:hidden;
   color:#eee;
 }
 
+/* CARD */
 .card{
+  position:relative;
+  margin:auto;
+  top:50%;
+  transform:translateY(-50%);
   background:#141428;
   padding:25px;
   width:90%;
@@ -27,6 +30,7 @@ body{
   box-shadow:0 40px 80px rgba(0,0,0,.8);
 }
 
+/* CONTENT */
 img{
   width:180px;
   border-radius:18px;
@@ -41,73 +45,170 @@ img{
   margin-bottom:10px;
 }
 
+/* BUTTONS */
 button{
-  width:80%;
   padding:14px;
   font-size:18px;
   border:none;
   border-radius:999px;
+  cursor:pointer;
+}
+
+.yes{
+  background:#ff4b6e;
+  color:white;
+  width:80%;
   margin-top:12px;
 }
 
-.yes{background:#ff4b6e;color:white}
-.no{background:#333;color:#aaa}
+.no{
+  position:absolute;
+  background:#333;
+  color:#aaa;
+}
+
+/* 💖 ENDING ANIMATION */
+.end{
+  animation:fadeInSlow 2.5s ease forwards;
+}
+
+@keyframes fadeInSlow{
+  from{
+    opacity:0;
+    transform:scale(0.95);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+/* FLOATING HEARTS */
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:20px;
+  opacity:0.6;
+  animation:floatUp 6s linear forwards;
+}
+
+@keyframes floatUp{
+  from{
+    transform:translateY(0);
+    opacity:0.7;
+  }
+  to{
+    transform:translateY(-110vh);
+    opacity:0;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="card" id="card"></div>
+<div class="card" id="card">
+  <div id="content"></div>
+  <button class="yes" onclick="yes()">YES 💍</button>
+  <button class="no" id="noBtn">NO 🙅‍♀️</button>
+</div>
 
 <script>
-const card = document.getElementById("card");
+const content = document.getElementById("content");
+const noBtn = document.getElementById("noBtn");
 let count = 0;
 
-const funny = [
-  ["https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif","Zero Two 😾","Are you sure, Bonda?"],
-  ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Hmm 😼","YES looks cute actually"],
-  ["https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif","Thinking? 🥺","Kinder Joy 🍫 for you"],
-  ["https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif","Please 😭","Ice-cream 🍨 deal"],
-  ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Still no 😅","I’ll wait forever"]
-];
-
+/* vibration */
 function vibrate(){
   if(navigator.vibrate) navigator.vibrate([60,30,60]);
 }
 
+/* funny + romantic loop */
+const messages = [
+  ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Zero Two 😽","Princess Buddi… I’m serious about us"],
+  ["https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif","Hmm 😼","Darling, the YES button is waiting"],
+  ["https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif","Thinking? 🥺","My love, Kinder Joy 🍫 is yours"],
+  ["https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif","Almost there 💕","Ice-cream 🍨 and forever hugs"],
+  ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","No rush 💭","Wifey, I’ll wait always"]
+];
+
 function showStart(){
-  card.innerHTML = `
+  content.innerHTML = `
     <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
     <div class="bubble">Hey Zero Two 😽</div>
-    <p>I love you, Bonda ❤️<br>Will you be mine forever?</p>
-    <button class="yes" onclick="yes()">YES 💍</button>
-    <button class="no" onclick="no()">NO 🙅‍♀️</button>
+    <p>
+      I love you, Princess Buddi ❤️<br>
+      Will you be mine forever?
+    </p>
   `;
+  resetNo();
 }
 
-function no(){
+function moveNo(){
   vibrate();
-  const f = funny[count % funny.length];
+
+  const maxX = window.innerWidth - noBtn.offsetWidth;
+  const maxY = window.innerHeight - noBtn.offsetHeight;
+
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top  = Math.random() * maxY + "px";
+
+  const m = messages[count % messages.length];
   count++;
-  card.innerHTML = `
-    <img src="${f[0]}">
-    <div class="bubble">${f[1]}</div>
-    <p>${f[2]}<br><small>NO clicks: ${count}</small></p>
-    <button class="yes" onclick="yes()">YES 💍</button>
-    <button class="no" onclick="no()">NO 🙅‍♀️</button>
+
+  content.innerHTML = `
+    <img src="${m[0]}">
+    <div class="bubble">${m[1]}</div>
+    <p>
+      ${m[2]}<br>
+      <small style="opacity:.6;">Still choosing…</small>
+    </p>
   `;
 }
 
-function yes(){
-  card.innerHTML = `
-    <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
-    <div class="bubble">Zero Two said YES 😻</div>
-    <p>You made me the happiest, Bonda ❤️<br>
-    December 20 was just the beginning<br>
-    I promise to love you forever</p>
-    <div style="font-size:55px;">🎉💍💖</div>
-  `;
+function resetNo(){
+  noBtn.style.left = "50%";
+  noBtn.style.bottom = "15px";
+  noBtn.style.top = "auto";
+  noBtn.style.transform = "translateX(-50%)";
 }
+
+/* 💖 YES — SLOW ROMANTIC ENDING */
+function yes(){
+  noBtn.style.display = "none";
+  document.querySelector(".yes").style.display = "none";
+
+  content.innerHTML = `
+    <div class="end">
+      <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
+      <div class="bubble">She said YES 😻</div>
+      <p>
+        My love, my princess, my forever ❤️<br><br>
+        December 20 was just the beginning<br>
+        I promise to choose you every day
+      </p>
+    </div>
+  `;
+
+  startHearts();
+}
+
+/* floating hearts */
+function startHearts(){
+  setInterval(()=>{
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "💖";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.fontSize = (18 + Math.random()*10) + "px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },600);
+}
+
+/* NO runs away */
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
 
 showStart();
 </script>
