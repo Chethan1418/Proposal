@@ -15,6 +15,7 @@ body{
   color:#eee;
 }
 
+/* CARD */
 .card{
   position:relative;
   margin:auto;
@@ -29,6 +30,7 @@ body{
   box-shadow:0 40px 80px rgba(0,0,0,.8);
 }
 
+/* CONTENT */
 img{
   width:180px;
   border-radius:18px;
@@ -43,6 +45,7 @@ img{
   margin-bottom:10px;
 }
 
+/* BUTTONS */
 button{
   padding:14px;
   font-size:18px;
@@ -51,17 +54,46 @@ button{
   cursor:pointer;
 }
 
+/* SMALLER YES */
 .yes{
   background:#ff4b6e;
   color:white;
-  width:80%;
+  width:60%;
+  padding:12px;
+  font-size:16px;
   margin-top:12px;
+  box-shadow:0 0 15px rgba(255,75,110,0.4);
 }
 
+/* RUNAWAY NO */
 .no{
   position:absolute;
   background:#333;
   color:#aaa;
+}
+
+/* ENDING ANIMATION */
+.end{
+  animation:fadeInSlow 2.5s ease forwards;
+}
+
+@keyframes fadeInSlow{
+  from{opacity:0;transform:scale(0.95)}
+  to{opacity:1;transform:scale(1)}
+}
+
+/* FLOATING HEARTS */
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:20px;
+  opacity:0.6;
+  animation:floatUp 6s linear forwards;
+}
+
+@keyframes floatUp{
+  from{transform:translateY(0);opacity:0.7}
+  to{transform:translateY(-110vh);opacity:0}
 }
 </style>
 </head>
@@ -85,11 +117,11 @@ function vibrate(){
   if(navigator.vibrate) navigator.vibrate([60,30,60]);
 }
 
-/* messages */
+/* funny + romantic messages */
 const messages = [
   ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","Zero Two 😽","Princess Buddi… I’m serious about us"],
-  ["https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif","Hmm 😼","Darling, the YES button is waiting"],
-  ["https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif","Thinking? 🥺","My love, Kinder Joy 🍫 is yours"],
+  ["https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif","Hmm 😼","Darling, the YES button looks sweet"],
+  ["https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif","Thinking? 🥺","My love, Kinder Joy 🍫 is waiting"],
   ["https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif","Almost there 💕","Ice-cream 🍨 and forever hugs"],
   ["https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif","No rush 💭","Wifey, I’ll wait always"]
 ];
@@ -106,11 +138,11 @@ function showStart(){
   placeNoFar();
 }
 
-/* 🔥 PLACE NO FAR FROM YES */
+/* keep NO far from YES */
 function placeNoFar(){
   const yesRect = yesBtn.getBoundingClientRect();
-  const buffer = 140; // distance from YES
-  let x, y, tries = 0;
+  const buffer = 140;
+  let x,y,tries=0;
 
   do{
     x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
@@ -146,25 +178,41 @@ function moveNo(){
   `;
 }
 
-/* YES */
+/* YES ENDING */
 function yes(){
-  noBtn.style.display = "none";
-  yesBtn.style.display = "none";
+  noBtn.style.display="none";
+  yesBtn.style.display="none";
+
   content.innerHTML = `
-    <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
-    <div class="bubble">She said YES 😻</div>
-    <p>
-      My love, my princess, my forever ❤️<br>
-      December 20 was just the beginning<br>
-      I promise to choose you every day
-    </p>
-    <div style="font-size:55px;">🎉💍💖</div>
+    <div class="end">
+      <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
+      <div class="bubble">She said YES 😻</div>
+      <p>
+        My love, my princess, my forever ❤️<br><br>
+        December 20 was just the beginning<br>
+        I promise to choose you every day
+      </p>
+    </div>
   `;
+  startHearts();
 }
 
-/* EVENTS */
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
+/* floating hearts */
+function startHearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="💖";
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=(18+Math.random()*10)+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },700);
+}
+
+/* events */
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
 
 showStart();
 </script>
