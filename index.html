@@ -31,16 +31,44 @@ body{
   position:relative;
 }
 
-/* CAT */
+/* SHAKE */
+.shake{
+  animation:shake 0.4s;
+}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-8px)}
+  50%{transform:translateX(8px)}
+  75%{transform:translateX(-8px)}
+  100%{transform:translateX(0)}
+}
+
+/* CAT STICKER */
 .cat{
   width:170px;
   margin:0 auto 10px;
   border-radius:20px;
   border:6px solid white;
   box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  animation:catPop 0.7s cubic-bezier(.68,-0.55,.27,1.55);
 }
 
-/* SPEECH */
+@keyframes catPop{
+  0%{transform:scale(0) rotate(-20deg)}
+  60%{transform:scale(1.25) rotate(10deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+
+.wiggle{
+  animation:wiggle 1s infinite;
+}
+@keyframes wiggle{
+  0%,100%{transform:rotate(0)}
+  25%{transform:rotate(3deg)}
+  75%{transform:rotate(-3deg)}
+}
+
+/* SPEECH BUBBLE */
 .bubble{
   background:#fff;
   padding:12px 16px;
@@ -48,6 +76,20 @@ body{
   display:inline-block;
   position:relative;
   margin-bottom:10px;
+  animation:bubblePop 0.5s ease;
+}
+.bubble::after{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:30px;
+  border-width:10px 10px 0;
+  border-style:solid;
+  border-color:#fff transparent;
+}
+@keyframes bubblePop{
+  from{transform:scale(0.7);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 
 /* BUTTONS */
@@ -63,35 +105,25 @@ button{
 .yes{background:#ff4b6e;color:white}
 .no{background:#eee;color:#aaa}
 
-/* QR OVERLAY */
-.qrOverlay{
+/* FLOATING PAWS */
+.paw{
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.5s ease;
+  font-size:28px;
+  animation:pawFloat 3s linear forwards;
+}
+@keyframes pawFloat{
+  to{transform:translateY(-120vh) rotate(360deg);opacity:0}
 }
 
-.qrCard{
-  background:white;
-  padding:25px;
-  border-radius:26px;
-  text-align:center;
-  animation:qrPop 0.6s ease;
+/* EMOJI RAIN */
+.emoji{
+  position:fixed;
+  top:-30px;
+  font-size:28px;
+  animation:fall linear forwards;
 }
-
-@keyframes qrPop{
-  0%{transform:scale(0.7);opacity:0}
-  100%{transform:scale(1);opacity:1}
-}
-
-.qrCard img{
-  width:220px;
-  border-radius:20px;
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
 }
 </style>
 </head>
@@ -100,64 +132,108 @@ button{
 
 <div class="card" id="card"></div>
 
-<!-- QR REVEAL -->
-<div class="qrOverlay" id="qrOverlay">
-  <div class="qrCard">
-    <h2 style="color:#ff4b6e;">One last thing ❤️</h2>
-    <p>Scan this</p>
-    <!-- ✅ FIXED IMAGE PATH -->
-    <img src="Untitled%201%20(1).png">
-    <p style="margin-top:10px;">😏✨</p>
-  </div>
-</div>
-
 <script>
+let stage=0;
+let attempts=0;
 const card=document.getElementById("card");
-const qrOverlay=document.getElementById("qrOverlay");
 
-showStart();
+/* paw sound */
+function pawSound(){
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+  osc.frequency.value=600;
+  gain.gain.value=0.05;
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime+0.08);
+}
 
-function showStart(){
+/* vibration */
+function buzz(){
+  if(navigator.vibrate) navigator.vibrate([60,30,60]);
+}
+
+/* floating paws */
+function spawnPaws(){
+  for(let i=0;i<6;i++){
+    const p=document.createElement("div");
+    p.className="paw";
+    p.textContent="🐾";
+    p.style.left=Math.random()*100+"vw";
+    p.style.bottom="-30px";
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),3000);
+  }
+}
+
+/* emoji rain */
+function emojiRain(){
+  const emojis=["😻","🐾","💖","💍"];
+  for(let i=0;i<120;i++){
+    const e=document.createElement("div");
+    e.className="emoji";
+    e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=Math.random()*100+"vw";
+    e.style.animationDuration=(Math.random()*2+2)+"s";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),4000);
+  }
+}
+
+show0();
+
+function show0(){
   card.innerHTML=`
-    <img class="cat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
+    <img class="cat wiggle" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
     <div class="bubble">Hey Monisha 😽</div>
-    <p>Will you be mine forever?</p>
+    <p>I love you<br>Will you be mine forever?</p>
     <button class="yes" onclick="yes()">YES 💍</button>
     <button class="no" onclick="no()">NO 🙅‍♀️</button>
   `;
 }
 
-let stage=0;
 function no(){
-  stage++;
-  if(stage<3){
+  stage++; attempts++;
+  pawSound(); buzz(); spawnPaws();
+  card.classList.add("shake");
+  setTimeout(()=>card.classList.remove("shake"),400);
+
+  if(stage===1){
     card.innerHTML=`
-      <img class="cat" src="https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif">
+      <img class="cat wiggle" src="https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif">
       <div class="bubble">Are you sure? 😼</div>
-      <p>I’ll convince you 😏</p>
+      <p>I’ll buy you a Kinder Joy 🍫<br>Attempt #${attempts} 😹</p>
+      <button class="yes" onclick="yes()">YES 💍</button>
+      <button class="no" onclick="no()">NO 🙅‍♀️</button>
+    `;
+  }else if(stage===2){
+    card.innerHTML=`
+      <img class="cat wiggle" src="https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif">
+      <div class="bubble">Last chance 🐾</div>
+      <p>Okay okay… LOTS of ice cream 🍨😂<br>Attempt #${attempts} 😹</p>
       <button class="yes" onclick="yes()">YES 💍</button>
       <button class="no" onclick="no()">NO 🙅‍♀️</button>
     `;
   }else{
     card.innerHTML=`
-      <img class="cat" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+      <img class="cat wiggle" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
       <div class="bubble">Okay fine 💔</div>
+      <p>But my heart already chose you 😿</p>
       <button class="yes" onclick="yes()">YES 💍</button>
     `;
   }
 }
 
 function yes(){
+  emojiRain();
   card.innerHTML=`
     <img class="cat" src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
     <div class="bubble">She said YES 😻</div>
-    <p>But wait…</p>
+    <p>Love you forever<br>December 20 was just the beginning</p>
+    <div style="font-size:60px;">🎉💖💍</div>
   `;
-
-  setTimeout(()=>{
-    qrOverlay.style.opacity="1";
-    qrOverlay.style.pointerEvents="auto";
-  },1200);
 }
 </script>
 
