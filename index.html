@@ -28,7 +28,7 @@ body{
   border-radius:30px;
   text-align:center;
   box-shadow:0 40px 90px rgba(0,0,0,0.8);
-  animation:fade 0.4s ease;
+  animation:fade 0.35s ease;
 }
 
 @keyframes fade{
@@ -87,24 +87,24 @@ button{
 let noCount = 0;
 const card = document.getElementById("card");
 
-/* vibration */
+/* vibration on NO */
 function vibrate(){
   if(navigator.vibrate){
     navigator.vibrate([60,30,60]);
   }
 }
 
-/* FUNNY + CUTE NO STAGES (LOOPS FOREVER) */
+/* INFINITE FUNNY NO STAGES */
 const noStages = [
   {
     img:"https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
-    bubble:"Zero Two… 😾",
-    text:"Are you sure, Bonda? I was really hoping you’d say yes"
+    bubble:"Zero Two 😾",
+    text:"Are you sure, Bonda?"
   },
   {
     img:"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
-    bubble:"Hmm Zero Two 😼",
-    text:"Bonda, maybe the YES button looks nicer"
+    bubble:"Hmm 😼",
+    text:"Bonda, maybe YES looks nicer"
   },
   {
     img:"https://media.giphy.com/media/12PA1eI8FBqEBa/giphy.gif",
@@ -114,22 +114,23 @@ const noStages = [
   {
     img:"https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
     bubble:"Please reconsider 😭",
-    text:"Okay then… lots of ice-cream 🍨 for my Bonda"
+    text:"Okay… lots of ice-cream 🍨 for my Bonda"
   },
   {
     img:"https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
-    bubble:"I’m not giving up 😌",
-    text:"Zero Two, Bonda… you’re too special to let go"
+    bubble:"Not giving up 😌",
+    text:"Zero Two, you’re too special"
   },
   {
     img:"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
     bubble:"Take your time 💭",
-    text:"I’ll wait right here, my Bonda"
+    text:"I’ll wait forever, Bonda"
   }
 ];
 
 showStart();
 
+/* START SCREEN */
 function showStart(){
   card.innerHTML = `
     <img class="cat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
@@ -143,6 +144,7 @@ function showStart(){
   `;
 }
 
+/* NO — LOOPS FOREVER */
 function no(){
   vibrate();
   const stage = noStages[noCount % noStages.length];
@@ -153,13 +155,14 @@ function no(){
     <div class="bubble">${stage.bubble}</div>
     <p>
       ${stage.text}<br>
-      <small style="opacity:.6;">Attempt #${noCount}</small>
+      <small style="opacity:.6;">NO count: ${noCount}</small>
     </p>
     <button class="yes" onclick="yes()">YES 💍</button>
     <button class="no" onclick="no()">NO 🙅‍♀️</button>
   `;
 }
 
+/* YES — ONLY WAY TO END */
 function yes(){
   card.innerHTML = `
     <img class="cat" src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">
@@ -167,7 +170,7 @@ function yes(){
     <p>
       You made me the happiest, Bonda ❤️<br>
       December 20 was just the beginning<br>
-      I promise to love you forever, Zero Two
+      I promise to love you forever
     </p>
     <div style="font-size:60px;">🎉💍💖</div>
   `;
